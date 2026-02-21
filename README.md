@@ -10,6 +10,10 @@ Un sintetizador generador de acordes para escritorio (macOS/Windows) inspirado e
 
 Tocas **una nota** en tu teclado MIDI → Pétalo genera un **acorde completo** según el tipo que hayas seleccionado, optimiza el movimiento de voces respecto al acorde anterior, y lo reproduce usando un soundfont SF2.
 
+Además incluye un **Step Sequencer** en ventana OS independiente — puedes tenerlo al lado de la pantalla principal mientras tocas:
+
+![Step Sequencer — ventana separada](docs/screenshot_sequencer.png)
+
 ---
 
 ## Requisitos
@@ -131,6 +135,39 @@ Cambia cómo se reproduce el acorde cuando tocas una tecla:
 
 ---
 
+### Step Sequencer — ventana OS independiente
+
+El botón **[SEQ]** del header abre el sequencer como una **ventana nativa separada** del sistema operativo. Puedes moverla libremente y tenerla al lado de la ventana principal.
+
+El sequencer graba **acordes completos** (no notas sueltas) en cada paso. Cada celda muestra la nota raíz, el tipo de acorde y el voicing.
+
+#### Controles de transporte
+
+| Control | Función |
+|---------|---------|
+| **● REC** | Activa el modo grabación — el siguiente acorde que toques en el Keystep se guarda en el paso que clickees |
+| **▶ PLAY** | Inicia la reproducción del loop |
+| **■ STOP** | Para y vuelve al paso 0 |
+| **CLEAR** | Borra todos los pasos |
+
+#### BUFFER
+
+Muestra el acorde actualmente "en buffer" (el último que tocaste en el Keystep). Cuando REC está activo, clickear un paso graba ese acorde en él.
+
+#### Grid de pasos
+
+- **STEPS** — selecciona entre 8, 16 o 32 pasos
+- **Click** en un paso vacío → lo activa/desactiva (toggle)
+- **Click** en REC activo → graba el buffer en ese paso
+- **Long press** → borra el paso
+- El paso activo durante la reproducción se ilumina en naranja
+
+#### BPM
+
+El slider de BPM del sequencer está sincronizado con el slider principal — cambiar uno actualiza el otro en tiempo real.
+
+---
+
 ### Teclado
 
 El teclado en la parte inferior muestra en tiempo real qué notas están sonando, iluminadas en naranja. Cubre 5 octavas (C2–B6).
@@ -151,15 +188,20 @@ petalo_synth/
 │   ├── core/
 │   │   ├── chord_engine.dart      # Generación de acordes
 │   │   ├── voice_leading.dart     # Optimización de voces
-│   │   └── arp_engine.dart        # Modos de performance
+│   │   ├── arp_engine.dart        # Modos de performance
+│   │   └── sequencer_engine.dart  # Motor del step sequencer (Timer)
 │   ├── midi/
 │   │   └── midi_service.dart      # Input MIDI (flutter_midi_command)
 │   ├── audio/
 │   │   └── audio_service.dart     # Reproducción SF2 (flutter_midi_pro)
 │   ├── models/
-│   │   └── synth_state.dart       # Estado global (Provider)
+│   │   ├── synth_state.dart         # Estado global del sintetizador
+│   │   ├── step_sequencer_state.dart # Estado del step sequencer
+│   │   └── sequencer_view_state.dart # Proxy state en la sub-ventana
 │   └── ui/
-│       ├── screens/main_screen.dart
+│       ├── screens/
+│       │   ├── main_screen.dart
+│       │   └── sequencer_window_app.dart  # App de la ventana del sequencer
 │       ├── theme/retro_theme.dart
 │       └── widgets/               # Knobs, pads, teclado, display
 ├── packages/
@@ -191,3 +233,5 @@ El instrumento por defecto es **GM #4 (Electric Piano / Rhodes)**.
 | `flutter_midi_command` | Recepción de mensajes MIDI desde el Keystep |
 | `flutter_midi_pro` (fork) | Reproducción de soundfonts SF2/DLS via AVAudioEngine |
 | `provider` | Gestión de estado con ChangeNotifier |
+| `desktop_multi_window` | Ventana OS independiente para el step sequencer |
+| `window_manager` | Control de tamaño y título de ventanas secundarias |
