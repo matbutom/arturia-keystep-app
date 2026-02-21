@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(flutter build:*)",
+      "Bash(gem list:*)",
+      "Bash(brew install:*)",
+      "Bash(pod --version:*)",
+      "Bash(open:*)",
+      "Bash(flutter run:*)",
+      "Bash(/usr/bin/log show:*)",
+      "Bash(pkill:*)",
+      "Bash(git commit:*)",
+      "Read(//Users/matpoto/.pub-cache/**)",
+      "Bash(pod install)"
+    ],
+    "additionalDirectories": [
+      "/Volumes/KINGSTON/github/matbutom/arturia-keystep-app",
+      "/Volumes/KINGSTON/github/matbutom/arturia-keystep-app/docs"
+    ]
+  }
+}

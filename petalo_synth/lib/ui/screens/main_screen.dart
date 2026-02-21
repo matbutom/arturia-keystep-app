@@ -21,6 +21,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/synth_state.dart';
+import '../../models/step_sequencer_state.dart';
 import '../../core/chord_engine.dart';
 import '../../core/arp_engine.dart';
 import '../theme/retro_theme.dart';
@@ -28,6 +29,9 @@ import '../widgets/retro_knob.dart';
 import '../widgets/chord_pad.dart';
 import '../widgets/led_display.dart';
 import '../widgets/keyboard_display.dart';
+import '../widgets/sequencer_button.dart';
+// La función openSequencerWindow vive en main.dart — importada via top-level
+import '../../main.dart' show openSequencerWindow;
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -36,15 +40,15 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: RetroTheme.background,
-      body: Consumer<SynthState>(
-        builder: (context, state, _) {
+      body: Consumer2<SynthState, StepSequencerState>(
+        builder: (context, state, seqState, _) {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _buildHeader(state),
+                  _buildHeader(context, state, seqState),
                   const SizedBox(height: 14),
                   _buildChordSection(context, state),
                   const SizedBox(height: 12),
@@ -64,7 +68,8 @@ class MainScreen extends StatelessWidget {
 
   // ─── HEADER ──────────────────────────────────────────────────────────────
 
-  Widget _buildHeader(SynthState state) {
+  Widget _buildHeader(
+      BuildContext context, SynthState state, StepSequencerState seqState) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: RetroTheme.panelDecoration(radius: 10),
@@ -92,6 +97,14 @@ class MainScreen extends StatelessWidget {
           ),
 
           const SizedBox(width: 20),
+
+          // Botón para abrir el step sequencer como ventana OS separada
+          SequencerButton(
+            isPlaying: seqState.isPlaying,
+            onTap: () => openSequencerWindow(seqState),
+          ),
+
+          const SizedBox(width: 16),
 
           // Indicadores LED de estado
           Column(

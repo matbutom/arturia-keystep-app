@@ -100,6 +100,18 @@ class SynthState extends ChangeNotifier {
     ArpPattern.chord: 'CHORD',
   };
 
+  // ─── Snapshot para el step sequencer ─────────────────────────────────
+
+  /// Snapshot del acorde actual para grabar en el step sequencer.
+  /// Devuelve un mapa con todos los datos necesarios para StepSequencerState.
+  Map<String, dynamic> get chordSnapshot => {
+    'rootNote': lastRootNote,
+    'chordType': selectedChordType,
+    'modifier': selectedModifier,
+    'notes': List<int>.from(currentChordNotes),
+    'velocity': 100,
+  };
+
   // ─── Nombre de la nota raíz ────────────────────────────────────────────
 
   /// Retorna el nombre de la nota raíz actual (ej: "C4", "G#3")
